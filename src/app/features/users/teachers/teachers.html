@@ -1,0 +1,107 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Gestión de Docentes</h1>
+      <p>{{ filteredTeachers().length }} docentes registrados</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" (click)="loadData()"><lucide-icon [img]="RefreshIcon"></lucide-icon></button>
+      <button class="btn-primary" (click)="openAdd()"><lucide-icon [img]="PlusIcon"></lucide-icon> Nuevo
+        Docente</button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="search-wrapper" style="flex:1">
+      <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" [(ngModel)]="searchQuery" class="search-input" placeholder="Buscar por nombre o DNI..."
+        (input)="applyFilter()" />
+    </div>
+    <select [(ngModel)]="filterStatus" class="filter-select" (change)="applyFilter()">
+      <option value="all">Todos</option>
+      <option value="ACTIVO">Activo</option>
+      <option value="INACTIVO">Inactivo</option>
+    </select>
+  </div>
+
+  @if (loading()) { <div class="loading-state"><mat-spinner diameter="36"></mat-spinner>
+    <p>Cargando...</p>
+  </div> }
+
+  @if (!loading()) {
+  <div class="card" style="padding:0">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Docente</th>
+            <th>DNI</th>
+            <th>Especialidad</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th style="text-align:center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of filteredTeachers(); track t.id) {
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div
+                  style="width:36px;height:36px;background:linear-gradient(135deg,var(--cv-gold),var(--cv-gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--cv-navy);font-size:.9rem;flex-shrink:0">
+                  {{ t.firstName.charAt(0) }}{{ t.lastName.charAt(0) }}
+                </div>
+                <div>
+                  <p style="font-weight:600">{{ t.lastName }}, {{ t.firstName }}</p>
+                </div>
+              </div>
+            </td>
+            <td style="font-family:var(--font-display);font-weight:600;color:var(--cv-text-mid)">{{ t.documentNumber }}
+            </td>
+            <td><span class="badge navy">{{ t.speciality }}</span></td>
+            <td style="font-size:.82rem;color:var(--cv-text-muted)">{{ t.email }}</td>
+            <td><span class="badge" [class]="t.status === 'ACTIVO' ? 'green' : 'red'">{{ t.status }}</span></td>
+            <td style="text-align:center">
+              <div style="display:flex;justify-content:center;gap:6px">
+                <button class="btn-icon" (click)="openEdit(t)"><lucide-icon [img]="EditIcon"></lucide-icon></button>
+                <button class="btn-icon" (click)="delete(t.id)" style="color:var(--cv-danger)"><lucide-icon
+                    [img]="TrashIcon"></lucide-icon></button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  @if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing() ? 'Editar Docente' : 'Nuevo Docente' }}</h3>
+        <button class="btn-icon" (click)="showModal.set(false)"><lucide-icon [img]="XIcon"></lucide-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Nombres *</label><input type="text" [(ngModel)]="form.firstName"
+              placeholder="Nombres" /></div>
+          <div class="form-group"><label>Apellidos *</label><input type="text" [(ngModel)]="form.lastName"
+              placeholder="Apellidos" /></div>
+          <div class="form-group"><label>DNI *</label><input type="text" [(ngModel)]="form.documentNumber"
+              maxlength="8" /></div>
+          <div class="form-group"><label>Especialidad</label><input type="text" [(ngModel)]="form.speciality"
+              placeholder="Ej: Matemática" /></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Correo</label><input type="email"
+              [(ngModel)]="form.email" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="showModal.set(false)">Cancelar</button>
+        <button class="btn-primary" (click)="save()">{{ isEditing() ? 'Actualizar' : 'Crear Docente' }}</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,85 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Administradores del Sistema</h1>
+      <p>Gestión de cuentas con acceso privilegiado</p>
+    </div>
+    <button class="btn-primary" (click)="openAdd()"><lucide-icon [img]="PlusIcon"></lucide-icon> Nuevo Admin</button>
+  </div>
+
+  <div class="card" style="padding:0">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Último acceso</th>
+            <th>Estado</th>
+            <th style="text-align:center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of users; track u.id) {
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div
+                  style="width:34px;height:34px;background:var(--cv-navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--cv-gold);font-size:.85rem;flex-shrink:0">
+                  {{ u.name.charAt(0) }}</div>
+                <p style="font-weight:600">{{ u.name }}</p>
+              </div>
+            </td>
+            <td style="font-size:.82rem;color:var(--cv-text-muted)">{{ u.email }}</td>
+            <td><span class="badge" [class]="u.role === 'ADMIN' ? 'red' : 'blue'">{{ u.role }}</span></td>
+            <td style="font-size:.8rem;color:var(--cv-text-muted)">{{ u.lastLogin }}</td>
+            <td><span class="badge" [class]="u.active ? 'green' : 'gray'">{{ u.active ? 'Activo' : 'Inactivo' }}</span>
+            </td>
+            <td style="text-align:center">
+              <div style="display:flex;justify-content:center;gap:6px">
+                <button class="btn-icon" (click)="openEdit(u)"><lucide-icon [img]="EditIcon"></lucide-icon></button>
+                <button class="btn-icon" (click)="toggleStatus(u)" [title]="u.active ? 'Desactivar' : 'Activar'"
+                  style="color:var(--cv-warning)"><lucide-icon
+                    [img]="u.active ? EyeOffIcon : EyeIcon"></lucide-icon></button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing() ? 'Editar Usuario' : 'Nuevo Administrador' }}</h3>
+        <button class="btn-icon" (click)="showModal.set(false)"><lucide-icon [img]="XIcon"></lucide-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1"><label>Nombre completo</label><input type="text"
+              [(ngModel)]="form.name" /></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Correo</label><input type="email"
+              [(ngModel)]="form.email" /></div>
+          <div class="form-group"><label>Rol</label>
+            <select [(ngModel)]="form.role">
+              <option value="ADMIN">Administrador</option>
+              <option value="COORDINATOR">Coordinador</option>
+            </select>
+          </div>
+          @if (!isEditing()) {
+          <div class="form-group"><label>Contraseña</label><input type="password" [(ngModel)]="form.password" /></div>
+          }
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="showModal.set(false)">Cancelar</button>
+        <button class="btn-primary" (click)="save()">{{ isEditing() ? 'Actualizar' : 'Crear' }}</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

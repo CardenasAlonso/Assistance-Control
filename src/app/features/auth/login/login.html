@@ -1,0 +1,94 @@
+<div class="login-page">
+
+  <!-- Left branding panel -->
+  <div class="login-left">
+    <div class="crest">
+      <div class="crest-badge">CV</div>
+      <div class="crest-text">
+        <h1>I.E. 20188<br>Centro de Varones</h1>
+        <p>Cañete, Lima · MINEDU</p>
+      </div>
+    </div>
+
+    <div class="tagline">
+      <h2>Gestión <em>académica</em><br>con excelencia.</h2>
+      <p>Sistema integral de control de asistencia, calificaciones por competencias y seguimiento académico alineado al
+        Currículo Nacional.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-num">450+</span>
+        <span class="stat-label">Estudiantes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">32</span>
+        <span class="stat-label">Docentes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">94%</span>
+        <span class="stat-label">Asistencia</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Bimestres</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right login card -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <lucide-icon [img]="LogoIcon"></lucide-icon>
+        </div>
+        <h2>Bienvenido</h2>
+        <p>Ingresa tus credenciales para acceder</p>
+      </div>
+
+      @if (errorMsg) {
+      <div class="error-msg">
+        <lucide-icon [img]="AlertIcon"></lucide-icon>
+        {{ errorMsg }}
+      </div>
+      }
+
+      <form (ngSubmit)="onLogin()" class="login-form">
+        <div class="input-group">
+          <label>Correo / DNI</label>
+          <div class="input-wrap">
+            <div class="input-icon"><lucide-icon [img]="UserIcon"></lucide-icon></div>
+            <input type="text" [(ngModel)]="email" name="email" placeholder="tu@correo.com" autocomplete="username" />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Contraseña</label>
+          <div class="input-wrap">
+            <div class="input-icon"><lucide-icon [img]="LockIcon"></lucide-icon></div>
+            <input [type]="showPass() ? 'text' : 'password'" [(ngModel)]="password" name="password"
+              placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="eye-btn" (click)="showPass.set(!showPass())">
+              <lucide-icon [img]="showPass() ? EyeOffIcon : EyeIcon"></lucide-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loading()">
+          @if (loading()) { <span class="spinner"></span> Ingresando... }
+          @else { Ingresar al Sistema }
+        </button>
+      </form>
+
+      <div class="divider"><span>acceso rápido (demo)</span></div>
+
+      <div class="demo-grid">
+        <button class="demo-btn admin" (click)="loginAs('admin')">🛡 Administrador</button>
+        <button class="demo-btn coordinator" (click)="loginAs('coordinator')">📋 Coordinador</button>
+        <button class="demo-btn teacher" (click)="loginAs('teacher')">📚 Docente</button>
+        <button class="demo-btn student" (click)="loginAs('student')">🎓 Estudiante</button>
+      </div>
+    </div>
+  </div>
+</div>

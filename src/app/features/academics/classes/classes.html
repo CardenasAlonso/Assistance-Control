@@ -1,0 +1,86 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Asignaciones de Curso</h1>
+      <p>Cursos asignados por docente y sección</p>
+    </div>
+    <button class="btn-primary" (click)="showModal.set(true)"><lucide-icon [img]="PlusIcon"></lucide-icon> Nueva
+      Asignación</button>
+  </div>
+
+  <div class="filters-card">
+    <div class="search-wrapper" style="flex:1">
+      <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" [(ngModel)]="searchQuery" class="search-input" placeholder="Buscar por curso o docente..."
+        (input)="filter()" />
+    </div>
+    <select [(ngModel)]="filterYear" class="filter-select">
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+    </select>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+    @for (a of filtered; track a.id) {
+    <div class="card" style="padding:18px 20px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+        <div
+          style="width:42px;height:42px;background:linear-gradient(135deg,var(--cv-navy),var(--cv-navy-light));border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <lucide-icon [img]="BookIcon" style="width:20px;height:20px;color:var(--cv-gold)"></lucide-icon>
+        </div>
+        <span class="badge" [class]="a.active ? 'green' : 'gray'">{{ a.active ? 'Activo' : 'Inactivo' }}</span>
+      </div>
+      <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--cv-navy);margin-bottom:4px">
+        {{ a.course }}</h3>
+      <p style="font-size:.8rem;color:var(--cv-text-muted);margin-bottom:10px">{{ a.teacher }}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="badge navy">{{ a.section }}</span>
+        <span class="badge gold">{{ a.year }}</span>
+        <span class="badge blue">{{ a.hours }}h/sem</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <button class="btn-small"
+          style="background:#e8edfa;color:var(--cv-navy);border:1px solid var(--cv-border);flex:1" (click)="view(a)">Ver
+          Detalles</button>
+        <button class="btn-icon" (click)="delete(a.id)"><lucide-icon [img]="TrashIcon"></lucide-icon></button>
+      </div>
+    </div>
+    }
+  </div>
+
+  @if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Nueva Asignación de Curso</h3><button class="btn-icon" (click)="showModal.set(false)"><lucide-icon
+            [img]="XIcon"></lucide-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1"><label>Curso</label><input type="text"
+              [(ngModel)]="form.course" placeholder="Ej: Matemática" /></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Docente</label><input type="text"
+              [(ngModel)]="form.teacher" placeholder="Nombre del docente" /></div>
+          <div class="form-group"><label>Sección</label>
+            <select [(ngModel)]="form.section">
+              <option value="">Seleccionar...</option>
+              <option value="3°A">3°A</option>
+              <option value="3°B">3°B</option>
+              <option value="4°A">4°A</option>
+              <option value="4°B">4°B</option>
+              <option value="5°A">5°A</option>
+              <option value="5°B">5°B</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Horas / semana</label><input type="number" [(ngModel)]="form.hours" min="1"
+              max="10" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="showModal.set(false)">Cancelar</button>
+        <button class="btn-primary" (click)="save()">Crear Asignación</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

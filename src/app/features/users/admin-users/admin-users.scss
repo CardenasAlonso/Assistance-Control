@@ -1,0 +1,29 @@
+.role-label {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+
+  &.role-student {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  &.role-teacher {
+    background: #dcfce7;
+    color: #15803d;
+  }
+
+  &.role-admin {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  &.role-coordinator {
+    background: #ede9fe;
+    color: #7c3aed;
+  }
+}

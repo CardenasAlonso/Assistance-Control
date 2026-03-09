@@ -1,0 +1,131 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Calificaciones de Estudiante</h1>
+      <p>Consultar notas por alumno y competencia</p>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="search-wrapper" style="flex:1">
+      <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Buscar por nombre o DNI..."
+        (input)="filterStudents()" />
+    </div>
+    <select class="filter-select" [(ngModel)]="selectedPeriod">
+      <option value="">Todos los bimestres</option>
+      <option value="B1">1° Bimestre</option>
+      <option value="B2">2° Bimestre</option>
+      <option value="B3">3° Bimestre</option>
+      <option value="B4">4° Bimestre</option>
+    </select>
+  </div>
+
+  @if (!selectedStudent) {
+  <div class="card">
+    <div class="card-header">
+      <h3>Lista de Estudiantes</h3>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Alumno</th>
+            <th>DNI</th>
+            <th>Sección</th>
+            <th>Promedio</th>
+            <th>Nivel</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of filteredStudents; track s.id) {
+          <tr>
+            <td style="font-weight:600">{{ s.lastName }}, {{ s.firstName }}</td>
+            <td style="color:var(--cv-text-muted);font-size:.82rem">{{ s.dni }}</td>
+            <td><span class="badge navy">{{ s.section }}</span></td>
+            <td><span style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:var(--cv-navy)">{{
+                s.avg }}</span></td>
+            <td><span class="badge" [class]="getPerf(s.avg)">{{ getPerfLabel(s.avg) }}</span></td>
+            <td><button class="btn-small"
+                style="background:#e8edfa;color:var(--cv-navy);border:1px solid var(--cv-border)"
+                (click)="selectStudent(s)">Ver Detalle</button></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  @if (selectedStudent) {
+  <div class="card">
+    <div class="card-header">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div
+          style="width:44px;height:44px;background:var(--cv-navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--cv-gold);font-size:1.1rem">
+          {{ selectedStudent.firstName.charAt(0) }}</div>
+        <div>
+          <h3>{{ selectedStudent.lastName }}, {{ selectedStudent.firstName }}</h3>
+          <p style="font-size:.78rem;color:var(--cv-text-muted)">DNI: {{ selectedStudent.dni }} · Sección: {{
+            selectedStudent.section }}</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div
+          style="text-align:center;background:linear-gradient(135deg,var(--cv-navy),var(--cv-navy-light));border-radius:var(--r-lg);padding:10px 18px">
+          <p
+            style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--cv-gold);line-height:1">
+            {{ selectedStudent.avg }}</p>
+          <p style="font-size:.65rem;color:rgba(255,255,255,.6)">Promedio</p>
+        </div>
+        <button class="btn-outline" (click)="selectedStudent = null"><lucide-icon [img]="XIcon"></lucide-icon>
+          Volver</button>
+      </div>
+    </div>
+
+    @for (course of studentCourses; track course.name) {
+    <div style="margin-bottom:16px;border:1px solid var(--cv-border-light);border-radius:var(--r-lg);overflow:hidden">
+      <div
+        style="background:var(--cv-surface-2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <p style="font-weight:700;color:var(--cv-navy);font-family:var(--font-display);font-size:1rem">{{ course.name
+            }}</p>
+          <p style="font-size:.75rem;color:var(--cv-text-muted)">{{ course.teacher }}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:var(--cv-navy)">{{
+            course.avg }}</span>
+          <span class="badge" [class]="getPerf(course.avg)">{{ getPerfLabel(course.avg) }}</span>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Competencia</th>
+              <th>Actividad</th>
+              <th>Bimestre</th>
+              <th>Nota</th>
+              <th>Nivel</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sc of course.scores; track sc.task) {
+            <tr>
+              <td style="font-size:.8rem;max-width:180px;white-space:normal">{{ sc.competency }}</td>
+              <td style="font-weight:500">{{ sc.task }}</td>
+              <td><span class="badge navy">{{ sc.period }}</span></td>
+              <td><span style="font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--cv-navy)">{{
+                  sc.score }}</span></td>
+              <td><span class="badge" [class]="getPerf(sc.score)">{{ getPerfLabel(sc.score) }}</span></td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

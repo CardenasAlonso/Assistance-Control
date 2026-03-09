@@ -1,0 +1,54 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Reportes Académicos</h1>
+      <p>Generación de informes y estadísticas</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">
+    @for (r of reportTypes; track r.title) {
+    <div class="card" style="cursor:pointer;transition:all .2s" (click)="generate(r)" (mouseenter)="r.hover=true"
+      (mouseleave)="r.hover=false" [style.transform]="r.hover ? 'translateY(-3px)' : ''"
+      [style.box-shadow]="r.hover ? 'var(--shadow-md)' : ''">
+      <div
+        style="width:48px;height:48px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;margin-bottom:14px"
+        [style.background]="r.bg">
+        <lucide-icon [img]="r.icon" style="width:24px;height:24px" [style.color]="r.color"></lucide-icon>
+      </div>
+      <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--cv-navy);margin-bottom:4px">
+        {{ r.title }}</h3>
+      <p style="font-size:.8rem;color:var(--cv-text-muted)">{{ r.desc }}</p>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <span class="badge navy">{{ r.format }}</span>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Filtros de Reporte</h3>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Período</label>
+        <select [(ngModel)]="filters.period">
+          <option value="B1">1° Bimestre</option>
+          <option value="B2">2° Bimestre</option>
+          <option value="annual">Anual</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Sección</label>
+        <select [(ngModel)]="filters.section">
+          <option value="all">Todas</option>
+          <option value="3A">3°A</option>
+          <option value="3B">3°B</option>
+          <option value="4A">4°A</option>
+          <option value="5A">5°A</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Desde</label><input type="date" [(ngModel)]="filters.from" /></div>
+      <div class="form-group"><label>Hasta</label><input type="date" [(ngModel)]="filters.to" /></div>
+    </div>
+  </div>
+</div>

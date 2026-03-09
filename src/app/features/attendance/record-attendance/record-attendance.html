@@ -1,0 +1,105 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Registrar Asistencia</h1>
+      <p>Registro manual de asistencia de clase</p>
+    </div>
+    <div class="header-actions">
+      @if (entries().length > 0) {
+      <div style="display:flex;gap:6px">
+        <span class="badge green">✓ {{ getCount('PRESENT') }}</span>
+        <span class="badge red">✗ {{ getCount('ABSENT') }}</span>
+        <span class="badge orange">⏰ {{ getCount('LATE') }}</span>
+      </div>
+      <button class="btn-gold" (click)="save()" [disabled]="saving()">
+        <lucide-icon [img]="SaveIcon"></lucide-icon>{{ saving() ? 'Guardando...' : 'Guardar Asistencia' }}
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="form-group" style="flex:1">
+      <label>Sección</label>
+      <select [(ngModel)]="selectedSection" (change)="onSectionChange()" class="filter-select" style="width:100%">
+        <option value="">Seleccionar sección...</option>
+        @for (s of sections(); track s.id) { <option [value]="s.id">{{ s.name }} — {{ s.turn }}</option> }
+      </select>
+    </div>
+    <div class="form-group" style="flex:1">
+      <label>Curso (opcional)</label>
+      <select [(ngModel)]="selectedAssignment" class="filter-select" style="width:100%">
+        <option value="">Seleccionar curso...</option>
+        @for (a of mockAssignments; track a.id) { <option [value]="a.id">{{ a.label }}</option> }
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Fecha</label>
+      <input type="date" [(ngModel)]="attendanceDate" class="filter-select" />
+    </div>
+  </div>
+
+  @if (loading()) {
+  <div class="loading-state"><mat-spinner diameter="36"></mat-spinner>
+    <p>Cargando lista...</p>
+  </div>
+  }
+
+  @if (entries().length > 0 && !loading()) {
+  <div class="card">
+    <div class="card-header">
+      <h3>Lista de Estudiantes — {{ entries().length }} alumnos</h3>
+      <div style="display:flex;gap:6px">
+        <button class="btn-small green" (click)="setAll('PRESENT')">✓ Todos Presentes</button>
+        <button class="btn-small red" (click)="setAll('ABSENT')">✗ Todos Ausentes</button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Apellidos y Nombres</th>
+            <th>DNI</th>
+            <th>Estado</th>
+            <th>Observación</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of entries(); track e.studentId; let i = $index) {
+          <tr>
+            <td style="color:var(--cv-text-muted);font-weight:600">{{ i+1 }}</td>
+            <td style="font-weight:600">{{ e.lastName }}, {{ e.firstName }}</td>
+            <td style="font-size:.8rem;color:var(--cv-text-muted)">{{ e.documentNumber }}</td>
+            <td>
+              <div style="display:flex;gap:4px">
+                <button class="att-btn present" [class.selected]="e.status === 'PRESENT'"
+                  (click)="setStatus(e.studentId,'PRESENT')">✓</button>
+                <button class="att-btn absent" [class.selected]="e.status === 'ABSENT'"
+                  (click)="setStatus(e.studentId,'ABSENT')">✗</button>
+                <button class="att-btn late" [class.selected]="e.status === 'LATE'"
+                  (click)="setStatus(e.studentId,'LATE')">⏰</button>
+                <button class="att-btn excused" [class.selected]="e.status === 'EXCUSED'"
+                  (click)="setStatus(e.studentId,'EXCUSED')">J</button>
+              </div>
+            </td>
+            <td><input type="text" [(ngModel)]="e.note" placeholder="Nota..."
+                style="padding:5px 8px;border:1px solid var(--cv-border);border-radius:6px;font-size:.8rem;width:140px;outline:none" />
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  @if (entries().length === 0 && !loading()) {
+  <div class="card">
+    <div class="empty-state">
+      <div class="empty-icon"><lucide-icon [img]="CheckIcon"></lucide-icon></div>
+      <p>Selecciona una sección para cargar la lista de estudiantes.</p>
+    </div>
+  </div>
+  }
+</div>

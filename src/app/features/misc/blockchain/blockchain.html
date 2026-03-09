@@ -1,0 +1,88 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Registro Blockchain</h1>
+      <p>Integridad y trazabilidad de datos académicos</p>
+    </div>
+    <div class="header-actions">
+      <span class="badge" [class]="chainValid ? 'green' : 'red'" style="font-size:.85rem;padding:6px 14px">
+        {{ chainValid ? '✓ Cadena Íntegra' : '⚠ Cadena Comprometida' }}
+      </span>
+      <button class="btn-outline" (click)="verifyChain()"><lucide-icon [img]="ShieldIcon"></lucide-icon>
+        Verificar</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon navy"><lucide-icon [img]="LayersIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Total Bloques</p>
+        <p class="stat-value">{{ blocks.length }}</p>
+        <p class="stat-status" style="color:var(--cv-text-muted)">En la cadena</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><lucide-icon [img]="ShieldIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Estado</p>
+        <p class="stat-value" style="font-size:1rem">{{ chainValid ? 'Válida' : 'Error' }}</p>
+        <p class="stat-status" style="color:var(--cv-success)">Integridad OK</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gold"><lucide-icon [img]="HashIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Algoritmo</p>
+        <p class="stat-value" style="font-size:.9rem">SHA-256</p>
+        <p class="stat-status" style="color:var(--cv-text-muted)">HS256</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><lucide-icon [img]="ClockIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Último Bloque</p>
+        <p class="stat-value" style="font-size:.85rem">{{ blocks[blocks.length-1]?.timestamp }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Bloques de la Cadena</h3>
+    </div>
+    @for (b of blocks; track b.index) {
+    <div
+      style="border:1px solid var(--cv-border-light);border-radius:var(--r-lg);padding:16px;margin-bottom:10px;position:relative;overflow:hidden">
+      <div
+        [ngStyle]="{'position':'absolute','top':'0','left':'0','width':'4px','height':'100%','background': b.index === 0 ? 'var(--cv-gold)' : 'var(--cv-navy)'}">
+      </div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-left:8px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--cv-navy)"># {{
+              b.index }}</span>
+            @if (b.index === 0) { <span class="badge gold">Génesis</span> }
+            <span class="badge navy">{{ b.eventType }}</span>
+            <span style="font-size:.75rem;color:var(--cv-text-muted)">{{ b.timestamp }}</span>
+          </div>
+          <p
+            style="font-size:.78rem;font-family:monospace;color:var(--cv-text-muted);word-break:break-all;margin-bottom:4px">
+            <strong style="color:var(--cv-text-mid)">Hash:</strong> {{ b.hash }}
+          </p>
+          <p style="font-size:.78rem;font-family:monospace;color:var(--cv-text-muted);word-break:break-all">
+            <strong style="color:var(--cv-text-mid)">Prev:</strong> {{ b.previousHash }}
+          </p>
+        </div>
+        <span class="badge" [class]="b.valid ? 'green' : 'red'" style="flex-shrink:0">{{ b.valid ? '✓' : '✗' }}</span>
+      </div>
+      @if (b.data) {
+      <div
+        style="margin-top:10px;padding:8px 12px;background:var(--cv-surface-2);border-radius:var(--r-md);padding-left:20px">
+        <p style="font-size:.8rem;color:var(--cv-text-mid)">{{ b.data }}</p>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

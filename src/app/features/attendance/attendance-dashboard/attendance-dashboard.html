@@ -1,0 +1,131 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Dashboard de Asistencia</h1>
+      <p>Resumen general — {{ today }}</p>
+    </div>
+    <div class="header-actions">
+      <select class="filter-select" [(ngModel)]="selectedDate">
+        <option value="today">Hoy</option>
+        <option value="week">Esta semana</option>
+        <option value="month">Este mes</option>
+      </select>
+      <button class="btn-primary"><lucide-icon [img]="DownloadIcon"></lucide-icon> Exportar</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon navy"><lucide-icon [img]="UsersIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Total Estudiantes</p>
+        <p class="stat-value">450</p>
+        <p class="stat-status" style="color:var(--cv-text-muted)">Matriculados</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><lucide-icon [img]="CheckIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Presentes Hoy</p>
+        <p class="stat-value">433</p>
+        <p class="stat-status" style="color:var(--cv-success)">96.2%</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><lucide-icon [img]="XIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Ausentes Hoy</p>
+        <p class="stat-value">12</p>
+        <p class="stat-status" style="color:var(--cv-danger)">2.7%</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><lucide-icon [img]="ClockIcon"></lucide-icon></div>
+      <div class="stat-info">
+        <p class="stat-label">Tardanzas Hoy</p>
+        <p class="stat-value">5</p>
+        <p class="stat-status" style="color:var(--cv-warning)">1.1%</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="card">
+      <div class="card-header">
+        <h3>Asistencia por Sección</h3>
+      </div>
+      @for (s of sections; track s.name) {
+      <div
+        style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--cv-border-light)">
+        <span class="badge navy" style="width:48px;justify-content:center">{{ s.name }}</span>
+        <div style="flex:1;height:7px;background:var(--cv-border-light);border-radius:99px;overflow:hidden">
+          <div [style.width.%]="s.pct" style="height:100%;border-radius:99px"
+            [style.background]="s.pct >= 90 ? 'var(--cv-success)' : s.pct >= 75 ? 'var(--cv-warning)' : 'var(--cv-danger)'">
+          </div>
+        </div>
+        <span
+          style="font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--cv-navy);width:42px;text-align:right">{{
+          s.pct }}%</span>
+        <span style="color:var(--cv-text-muted);font-size:.75rem;width:50px">{{ s.present }}/{{ s.total }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Alumnos con Más Ausencias</h3><span class="badge red">Crítico</span>
+      </div>
+      @for (a of absentAlert; track a.name) {
+      <div
+        style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--cv-border-light)">
+        <div
+          style="width:34px;height:34px;background:var(--cv-danger-tint);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--cv-danger);flex-shrink:0">
+          {{ a.name.charAt(0) }}</div>
+        <div style="flex:1">
+          <p style="font-weight:600;font-size:.85rem;color:var(--cv-text)">{{ a.name }}</p>
+          <p style="font-size:.75rem;color:var(--cv-text-muted)">{{ a.section }} · {{ a.absences }} faltas</p>
+        </div>
+        <span class="badge" [class]="a.absences >= 5 ? 'red' : 'orange'">{{ a.absences >= 5 ? 'Crítico' : 'Alerta'
+          }}</span>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3>Registro del Día</h3>
+      <div class="search-wrapper" style="width:260px">
+        <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+        <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Buscar alumno..."
+          (input)="filterRecords()" />
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Alumno</th>
+            <th>Sección</th>
+            <th>Hora Entrada</th>
+            <th>Método</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of filteredRecords; track r.name) {
+          <tr>
+            <td style="font-weight:600">{{ r.name }}</td>
+            <td><span class="badge navy">{{ r.section }}</span></td>
+            <td style="font-family:var(--font-display);font-weight:600">{{ r.time }}</td>
+            <td><span class="badge" [class]="r.method === 'QR' ? 'blue' : 'gold'">{{ r.method }}</span></td>
+            <td><span class="badge"
+                [class]="r.status === 'PRESENT' ? 'green' : r.status === 'LATE' ? 'orange' : 'red'">{{
+                getStatusLabel(r.status) }}</span></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

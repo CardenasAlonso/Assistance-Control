@@ -1,0 +1,86 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Información Institucional</h1>
+      <p>Datos de la I.E. Centro de Varones N°20188</p>
+    </div>
+    <button class="btn-gold" (click)="editing = !editing"><lucide-icon
+        [img]="editing ? SaveIcon : EditIcon"></lucide-icon>{{ editing ? 'Guardar Cambios' : 'Editar' }}</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="card">
+      <div class="card-header">
+        <h3>Datos Generales</h3>
+      </div>
+      <div class="form-grid" style="grid-template-columns:1fr">
+        @for (f of fields; track f.key) {
+        <div class="form-group">
+          <label>{{ f.label }}</label>
+          @if (editing) { <input type="text" [(ngModel)]="institution[f.key]" /> }
+          @else { <p
+            style="padding:10px 13px;background:var(--cv-surface-2);border-radius:var(--r-md);font-size:.875rem;color:var(--cv-text);border:1px solid var(--cv-border-light)">
+            {{ institution[f.key] }}</p> }
+        </div>
+        }
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="card-header">
+          <h3>Secciones Activas</h3><button class="btn-primary" style="padding:6px 12px;font-size:.8rem"
+            (click)="addSection()"><lucide-icon [img]="PlusIcon"></lucide-icon> Agregar</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          @for (s of sections; track s) {
+          <div
+            style="display:flex;align-items:center;gap:6px;background:var(--cv-surface-2);border:1px solid var(--cv-border-light);border-radius:var(--r-md);padding:6px 12px">
+            <span style="font-weight:600;font-size:.85rem;color:var(--cv-navy)">{{ s }}</span>
+            @if (editing) { <button
+              style="background:none;border:none;cursor:pointer;color:var(--cv-danger);display:flex"
+              (click)="removeSection(s)">✕</button> }
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Año Escolar Activo</h3>
+        </div>
+        <div
+          style="background:linear-gradient(135deg,var(--cv-navy),var(--cv-navy-light));border-radius:var(--r-lg);padding:20px;text-align:center">
+          <p style="font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--cv-gold);line-height:1">
+            2025</p>
+          <p style="color:rgba(255,255,255,.6);font-size:.85rem;margin-top:4px">Año escolar en curso</p>
+          <div style="display:flex;justify-content:center;gap:20px;margin-top:16px">
+            <div style="text-align:center">
+              <p style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff">Mar 2025</p>
+              <p style="font-size:.7rem;color:rgba(255,255,255,.5)">Inicio</p>
+            </div>
+            <div style="width:1px;background:rgba(255,255,255,.15)"></div>
+            <div style="text-align:center">
+              <p style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff">Dic 2025</p>
+              <p style="font-size:.7rem;color:rgba(255,255,255,.5)">Fin</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Resumen</h3>
+        </div>
+        @for (stat of summary; track stat.label) {
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cv-border-light)">
+          <span style="font-size:.875rem;color:var(--cv-text-muted)">{{ stat.label }}</span>
+          <span style="font-family:var(--font-display);font-weight:700;color:var(--cv-navy);font-size:1rem">{{
+            stat.value }}</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,207 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Registrar Calificaciones</h1>
+      <p>Notas por competencia y actividad — MINEDU</p>
+    </div>
+    <div class="header-actions">
+      <div class="tab-bar">
+        <button class="tab-btn" [class.active]="tab() === 'record'" (click)="tab.set('record')">Registrar</button>
+        <button class="tab-btn" [class.active]="tab() === 'tasks'" (click)="tab.set('tasks')">Tareas /
+          Actividades</button>
+        <button class="tab-btn" [class.active]="tab() === 'view'" (click)="tab.set('view')">Ver Notas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selector de clase -->
+  <div class="filters-card">
+    <select class="filter-select" [(ngModel)]="selectedAssignment" (change)="onAssignmentChange()">
+      <option value="">Seleccionar asignación de curso...</option>
+      @for (a of assignments(); track a.id) { <option [value]="a.id">{{ a.label }}</option> }
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedPeriod">
+      <option value="">Seleccionar bimestre...</option>
+      <option value="B1">1° Bimestre</option>
+      <option value="B2">2° Bimestre</option>
+      <option value="B3">3° Bimestre</option>
+      <option value="B4">4° Bimestre</option>
+    </select>
+    <button class="btn-icon" (click)="loadData()" title="Recargar"><lucide-icon
+        [img]="RefreshIcon"></lucide-icon></button>
+  </div>
+
+  <!-- TAB: Registrar notas en tabla -->
+  @if (tab() === 'record') {
+  <div class="card">
+    <div class="card-header">
+      <h3>Ingresar Notas</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="filter-select" [(ngModel)]="selectedTask">
+          <option value="">Seleccionar tarea/actividad...</option>
+          @for (t of tasks(); track t.id) { <option [value]="t.id">{{ t.title }} — {{ t.competencyName }}</option> }
+        </select>
+        <button class="btn-gold" (click)="saveScores()" [disabled]="saving()">
+          <lucide-icon [img]="SaveIcon"></lucide-icon>
+          {{ saving() ? 'Guardando...' : 'Guardar Notas' }}
+        </button>
+      </div>
+    </div>
+
+    @if (loading()) {
+    <div class="loading-state"><mat-spinner diameter="36"></mat-spinner>
+      <p>Cargando estudiantes...</p>
+    </div>
+    }
+
+    @if (!loading() && entries().length > 0) {
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Apellidos y Nombres</th>
+            <th>DNI</th>
+            <th>Nota (0–20)</th>
+            <th>Nivel</th>
+            <th>Comentario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (e of entries(); track e.studentId; let i = $index) {
+          <tr>
+            <td style="color:var(--cv-text-muted);font-weight:600">{{ i+1 }}</td>
+            <td style="font-weight:600">{{ e.lastName }}, {{ e.firstName }}</td>
+            <td style="font-size:.8rem;color:var(--cv-text-muted)">{{ e.documentNumber }}</td>
+            <td>
+              <input type="number" min="0" max="20" step="0.5" [(ngModel)]="e.score" class="score-input"
+                [class.high]="(e.score ?? 0) >= 18" [class.mid]="(e.score ?? 0) >= 11 && (e.score ?? 0) < 18"
+                [class.low]="(e.score ?? 0) < 11" />
+            </td>
+            <td>
+              @if (e.score !== null && e.score !== undefined) {
+              <span class="badge" [class]="getPerfClass(e.score)">{{ getPerfLabel(e.score) }}</span>
+              }
+            </td>
+            <td><input type="text" [(ngModel)]="e.comment" placeholder="Observación..."
+                style="width:100%;padding:6px 8px;border:1px solid var(--cv-border);border-radius:6px;font-size:.8rem" />
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+
+    @if (!loading() && entries().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon"><lucide-icon [img]="BookIcon"></lucide-icon></div>
+      <p>Selecciona una asignación y una tarea para ingresar notas.</p>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- TAB: Gestionar tareas/actividades -->
+  @if (tab() === 'tasks') {
+  <div class="card">
+    <div class="card-header">
+      <h3>Tareas y Actividades</h3>
+      <button class="btn-primary" (click)="openNewTask()">
+        <lucide-icon [img]="PlusIcon"></lucide-icon> Nueva Tarea
+      </button>
+    </div>
+    @if (tasks().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon"><lucide-icon [img]="BookIcon"></lucide-icon></div>
+      <p>No hay tareas para esta asignación. <strong>Crea la primera actividad.</strong></p>
+    </div>
+    }
+    @for (t of tasks(); track t.id) {
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid var(--cv-border-light)">
+      <div style="flex:1">
+        <p style="font-weight:600;color:var(--cv-text)">{{ t.title }}</p>
+        <p style="font-size:.78rem;color:var(--cv-text-muted)">{{ t.competencyName }} · Vence: {{ t.dueDate }}</p>
+      </div>
+      <span class="badge" [class]="t.isActive ? 'green' : 'gray'">{{ t.isActive ? 'Activa' : 'Cerrada' }}</span>
+      <button class="btn-icon" (click)="deleteTask(t.id!)"><lucide-icon [img]="TrashIcon"></lucide-icon></button>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- TAB: Ver notas registradas -->
+  @if (tab() === 'view') {
+  <div class="card">
+    <div class="card-header">
+      <h3>Notas Registradas</h3>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Alumno</th>
+            <th>Tarea</th>
+            <th>Competencia</th>
+            <th>Nota</th>
+            <th>Nivel</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of savedScores(); track s.id) {
+          <tr>
+            <td>{{ s.studentId }}</td>
+            <td>{{ s.classTaskTitle }}</td>
+            <td style="font-size:.8rem">{{ s.competencyName }}</td>
+            <td><span style="font-family:var(--font-display);font-weight:700;color:var(--cv-navy)">{{ s.score }}</span>
+            </td>
+            <td><span class="badge" [class]="getPerfClass(s.score)">{{ getPerfLabel(s.score) }}</span></td>
+            <td style="font-size:.8rem;color:var(--cv-text-muted)">{{ s.registeredAt }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  <!-- Modal nueva tarea -->
+  @if (showTaskModal()) {
+  <div class="modal-overlay" (click)="showTaskModal.set(false)">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Nueva Tarea / Actividad</h3>
+        <button class="btn-icon" (click)="showTaskModal.set(false)"><lucide-icon [img]="XIcon"></lucide-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Título de la actividad</label>
+            <input type="text" [(ngModel)]="taskForm.title" placeholder="Ej: Examen Bimestral — Álgebra" />
+          </div>
+          <div class="form-group">
+            <label>Competencia MINEDU</label>
+            <select [(ngModel)]="taskForm.competencyId">
+              <option value="">Seleccionar...</option>
+              @for (c of competencies(); track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha de entrega</label>
+            <input type="date" [(ngModel)]="taskForm.dueDate" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Descripción (opcional)</label>
+            <textarea [(ngModel)]="taskForm.description" placeholder="Descripción de la actividad..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="showTaskModal.set(false)">Cancelar</button>
+        <button class="btn-primary" (click)="saveTask()">Crear Actividad</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

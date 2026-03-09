@@ -1,0 +1,134 @@
+<div class="page-container">
+  <!-- Welcome banner -->
+  <div class="welcome-banner" [attr.data-code]="userRole === 'ADMIN' ? 'ADM' : userRole === 'TEACHER' ? 'DOC' : 'EST'">
+    <div class="welcome-text">
+      <h1>¡Bienvenido, {{ getGreetingName() }}!</h1>
+      <p>{{ getRoleDesc() }} · I.E. Centro de Varones N°20188 · {{ today }}</p>
+    </div>
+    <div class="welcome-icon">
+      <lucide-icon [img]="getWelcomeIcon()"></lucide-icon>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    @for (stat of getStats(); track stat.label) {
+    <div class="stat-card">
+      <div class="stat-icon" [class]="stat.color">
+        <lucide-icon [img]="stat.icon"></lucide-icon>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">{{ stat.label }}</p>
+        <p class="stat-value">{{ stat.value }}</p>
+        <p class="stat-status" [style.color]="'var(--cv-' + stat.color + ')'">{{ stat.sub }}</p>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- STUDENT view -->
+  @if (userRole === 'STUDENT') {
+  <p class="section-title">Mi Rendimiento Académico</p>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <h3>Mis Calificaciones</h3><span class="badge navy">Período Actual</span>
+      </div>
+      @for (s of studentScores; track s.subject) {
+      <div class="score-row">
+        <span class="score-subject">{{ s.subject }}</span>
+        <div class="score-bar">
+          <div class="fill" [style.width.%]="s.score * 5"></div>
+        </div>
+        <span class="score-val">{{ s.score }}</span>
+      </div>
+      }
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Alertas</h3>
+      </div>
+      @for (a of studentAlerts; track a.text) {
+      <div class="alert-item" [class]="a.type">
+        <span class="alert-dot"></span>
+        <div class="alert-text">
+          <p class="at-title">{{ a.text }}</p>
+          <p class="at-sub">{{ a.sub }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- TEACHER view -->
+  @if (userRole === 'TEACHER') {
+  <p class="section-title">Acciones del Docente</p>
+  <div class="quick-grid">
+    @for (action of teacherActions; track action.label) {
+    <div class="quick-card" (click)="go(action.route)">
+      <div class="qc-icon" [style.background]="action.bg" [style.color]="action.color">
+        <lucide-icon [img]="action.icon"></lucide-icon>
+      </div>
+      <div class="qc-text">
+        <p class="qc-label">{{ action.label }}</p>
+        <p class="qc-sub">{{ action.sub }}</p>
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- ADMIN / COORDINATOR view -->
+  @if (userRole === 'ADMIN' || userRole === 'COORDINATOR') {
+  <p class="section-title">Acciones Rápidas</p>
+  <div class="quick-grid">
+    @for (action of adminActions; track action.label) {
+    <div class="quick-card" (click)="go(action.route)">
+      <div class="qc-icon" [style.background]="action.bg" [style.color]="action.color">
+        <lucide-icon [img]="action.icon"></lucide-icon>
+      </div>
+      <div class="qc-text">
+        <p class="qc-label">{{ action.label }}</p>
+        <p class="qc-sub">{{ action.sub }}</p>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <h3>Alertas del Sistema</h3>
+      </div>
+      @for (a of systemAlerts; track a.text) {
+      <div class="alert-item" [class]="a.type">
+        <span class="alert-dot"></span>
+        <div class="alert-text">
+          <p class="at-title">{{ a.text }}</p>
+          <p class="at-sub">{{ a.sub }}</p>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Asistencia Hoy</h3><span class="badge green">En vivo</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        @for (d of attendanceSummary; track d.label) {
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:.82rem;color:var(--cv-text-muted);width:90px">{{ d.label }}</span>
+          <div style="flex:1;height:8px;background:var(--cv-border-light);border-radius:99px;overflow:hidden">
+            <div [style.width.%]="d.pct" [style.background]="d.color"
+              style="height:100%;border-radius:99px;transition:width .6s"></div>
+          </div>
+          <span
+            style="font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--cv-navy);width:36px;text-align:right">{{
+            d.pct }}%</span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,94 @@
+<div style="display:flex;flex-direction:column;height:calc(100vh - 104px)">
+  <div class="page-header" style="flex-shrink:0;margin-bottom:16px">
+    <div class="page-title">
+      <h1>Asistente IA — MINEDU</h1>
+      <p>Consultas sobre el Currículo Nacional y normativa educativa peruana</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="badge" [class]="connected ? 'green' : 'red'">{{ connected ? '● En línea' : '● Desconectado' }}</span>
+      <button class="btn-icon" (click)="clearChat()" title="Limpiar chat"><lucide-icon
+          [img]="TrashIcon"></lucide-icon></button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="card" style="flex:1;overflow:hidden;padding:0;display:flex;flex-direction:column">
+    <div #messagesContainer style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px">
+
+      @if (messages.length === 0) {
+      <div style="text-align:center;padding:40px 20px;color:var(--cv-text-muted)">
+        <div
+          style="width:64px;height:64px;background:linear-gradient(135deg,var(--cv-navy),var(--cv-navy-light));border-radius:var(--r-xl);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:var(--shadow-md)">
+          <lucide-icon [img]="BotIcon" style="width:32px;height:32px;color:var(--cv-gold)"></lucide-icon>
+        </div>
+        <p
+          style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--cv-navy);margin-bottom:6px">
+          Asistente Pedagógico IA</p>
+        <p style="font-size:.85rem;max-width:360px;margin:0 auto">Consulta el Currículo Nacional, competencias,
+          estándares de aprendizaje y normativa MINEDU.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+          @for (s of suggestions; track s) {
+          <button
+            style="padding:8px 14px;border:1.5px solid var(--cv-border);border-radius:99px;background:var(--cv-surface-2);font-size:.8rem;cursor:pointer;transition:all .15s;color:var(--cv-text-mid)"
+            (click)="sendSuggestion(s)">{{ s }}</button>
+          }
+        </div>
+      </div>
+      }
+
+      @for (msg of messages; track msg.id) {
+      <div style="display:flex;gap:10px" [style.flex-direction]="msg.role === 'user' ? 'row-reverse' : 'row'">
+        <div
+          style="width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:.8rem"
+          [style.background]="msg.role === 'user' ? 'var(--cv-navy)' : 'var(--cv-gold)'"
+          [style.color]="msg.role === 'user' ? 'var(--cv-gold)' : 'var(--cv-navy)'">
+          {{ msg.role === 'user' ? 'Tú' : 'IA' }}
+        </div>
+        <div style="max-width:70%;padding:12px 16px;border-radius:var(--r-lg);font-size:.875rem;line-height:1.6"
+          [style.background]="msg.role === 'user' ? 'var(--cv-navy)' : 'var(--cv-surface-2)'"
+          [style.color]="msg.role === 'user' ? '#fff' : 'var(--cv-text)'"
+          [style.border]="msg.role === 'assistant' ? '1px solid var(--cv-border-light)' : 'none'">
+          <p style="white-space:pre-wrap">{{ msg.content }}</p>
+          @if (msg.sources && msg.sources.length > 0) {
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2)">
+            <p style="font-size:.7rem;opacity:.7">Fuentes: {{ msg.sources.join(', ') }}</p>
+          </div>
+          }
+          <p style="font-size:.68rem;opacity:.5;margin-top:4px;text-align:right">{{ msg.time }}</p>
+        </div>
+      </div>
+      }
+
+      @if (thinking) {
+      <div style="display:flex;gap:10px">
+        <div
+          style="width:32px;height:32px;border-radius:50%;background:var(--cv-gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:.8rem;color:var(--cv-navy)">
+          IA</div>
+        <div
+          style="padding:12px 16px;background:var(--cv-surface-2);border:1px solid var(--cv-border-light);border-radius:var(--r-lg);display:flex;align-items:center;gap:6px">
+          <span
+            style="width:8px;height:8px;border-radius:50%;background:var(--cv-navy);animation:pulse 1.2s ease infinite"></span>
+          <span
+            style="width:8px;height:8px;border-radius:50%;background:var(--cv-navy);animation:pulse 1.2s ease .3s infinite"></span>
+          <span
+            style="width:8px;height:8px;border-radius:50%;background:var(--cv-navy);animation:pulse 1.2s ease .6s infinite"></span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Input -->
+    <div
+      style="padding:14px 20px;border-top:1px solid var(--cv-border-light);display:flex;gap:10px;align-items:flex-end;background:var(--cv-surface);border-radius:0 0 var(--r-lg) var(--r-lg)">
+      <textarea [(ngModel)]="inputText"
+        placeholder="Escribe tu consulta sobre MINEDU, Currículo Nacional, competencias..."
+        (keydown)="$event.key === 'Enter' && !$event.shiftKey && onEnter()"
+        style="flex:1;border:1.5px solid var(--cv-border);border-radius:var(--r-md);padding:10px 14px;font-family:var(--font-body);font-size:.875rem;resize:none;min-height:44px;max-height:120px;outline:none;transition:border-color .18s"
+        rows="1"></textarea>
+      <button class="btn-primary" (click)="sendMessage()" [disabled]="!inputText.trim() || thinking"
+        style="height:44px;padding:0 16px;flex-shrink:0">
+        <lucide-icon [img]="SendIcon"></lucide-icon>
+      </button>
+    </div>
+  </div>
+</div>

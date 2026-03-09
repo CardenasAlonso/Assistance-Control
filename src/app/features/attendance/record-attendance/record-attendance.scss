@@ -1,0 +1,162 @@
+.summary-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.badge-green {
+  padding: 4px 12px;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-red {
+  padding: 4px 12px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-yellow {
+  padding: 4px 12px;
+  background: #fef9c3;
+  color: #854d0e;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attendance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+  transition: all 0.15s;
+
+  &.absent {
+    background: #fff5f5;
+    border-color: #fecaca;
+  }
+
+  &.late {
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.mini-avatar {
+  width: 32px;
+  height: 32px;
+  background: #e0f2fe;
+  color: #0284c7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 6px;
+
+  button {
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: 1.5px solid #e2e8f0;
+    background: #f9fafb;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+      border-color: #94a3b8;
+    }
+  }
+
+  .active-present {
+    background: #dcfce7;
+    border-color: #16a34a;
+    color: #15803d;
+    font-weight: 700;
+  }
+
+  .active-absent {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #dc2626;
+    font-weight: 700;
+  }
+
+  .active-late {
+    background: #fef9c3;
+    border-color: #f59e0b;
+    color: #854d0e;
+    font-weight: 700;
+  }
+}
+
+.btn-small {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1.5px solid;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-small.green {
+  border-color: #bbf7d0;
+  color: #15803d;
+  background: #f0fdf4;
+
+  &:hover {
+    background: #dcfce7
+  }
+}
+
+.btn-small.red {
+  border-color: #fecaca;
+  color: #dc2626;
+  background: #fef2f2;
+
+  &:hover {
+    background: #fee2e2
+  }
+}
+
+.btn-small.yellow {
+  border-color: #fde68a;
+  color: #854d0e;
+  background: #fffbeb;
+
+  &:hover {
+    background: #fef9c3
+  }
+}

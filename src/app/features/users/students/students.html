@@ -1,0 +1,153 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Gestión de Estudiantes</h1>
+      <p>{{ filteredStudents().length }} estudiantes encontrados</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" (click)="loadData()" title="Recargar"><lucide-icon
+          [img]="RefreshIcon"></lucide-icon></button>
+      <button class="btn-primary" (click)="openAdd()"><lucide-icon [img]="PlusIcon"></lucide-icon> Nuevo
+        Estudiante</button>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="search-wrapper" style="flex:1">
+      <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" [(ngModel)]="searchQuery" class="search-input"
+        placeholder="Buscar por nombre, apellido o DNI..." (input)="applyFilter()" />
+    </div>
+    <select [(ngModel)]="filterSection" class="filter-select" (change)="applyFilter()">
+      <option value="all">Todas las secciones</option>
+      <option value="3°A">3°A</option>
+      <option value="3°B">3°B</option>
+      <option value="4°A">4°A</option>
+      <option value="4°B">4°B</option>
+      <option value="5°A">5°A</option>
+      <option value="5°B">5°B</option>
+    </select>
+    <select [(ngModel)]="filterStatus" class="filter-select" (change)="applyFilter()">
+      <option value="all">Todos los estados</option>
+      <option value="ACTIVO">Activo</option>
+      <option value="INACTIVO">Inactivo</option>
+    </select>
+  </div>
+
+  @if (loading()) {
+  <div class="loading-state"><mat-spinner diameter="36"></mat-spinner>
+    <p>Cargando estudiantes...</p>
+  </div>
+  }
+
+  @if (!loading()) {
+  <div class="card" style="padding:0">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>DNI</th>
+            <th>Sección</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th style="text-align:center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of filteredStudents(); track s.id) {
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="avatar-circle">{{ getInitials(s) }}</div>
+                <div>
+                  <p style="font-weight:600;color:var(--cv-text)">{{ s.lastName }}, {{ s.firstName }}</p>
+                </div>
+              </div>
+            </td>
+            <td style="font-family:var(--font-display);font-weight:600;color:var(--cv-text-mid)">{{ s.documentNumber }}
+            </td>
+            <td><span class="badge navy">{{ s.sectionId }}</span></td>
+            <td style="font-size:.82rem;color:var(--cv-text-muted)">{{ s.email || '—' }}</td>
+            <td><span class="badge" [class]="s.status === 'ACTIVO' ? 'green' : 'red'">{{ s.status }}</span></td>
+            <td style="text-align:center">
+              <div style="display:flex;justify-content:center;gap:6px">
+                <button class="btn-icon" (click)="openEdit(s)" title="Editar"><lucide-icon
+                    [img]="EditIcon"></lucide-icon></button>
+                <button class="btn-icon" (click)="delete(s.id!)" title="Eliminar"
+                  style="color:var(--cv-danger)"><lucide-icon [img]="TrashIcon"></lucide-icon></button>
+              </div>
+            </td>
+          </tr>
+          }
+          @if (filteredStudents().length === 0) {
+          <tr>
+            <td colspan="6">
+              <div class="empty-state" style="padding:32px">
+                <div class="empty-icon"><lucide-icon [img]="GradIcon"></lucide-icon></div>
+                <p>No se encontraron estudiantes con estos filtros.</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  @if (showModal()) {
+  <div class="modal-overlay" (click)="showModal.set(false)">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing() ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h3>
+        <button class="btn-icon" (click)="showModal.set(false)"><lucide-icon [img]="XIcon"></lucide-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombres *</label>
+            <input type="text" [(ngModel)]="form.firstName" placeholder="Nombres completos" />
+          </div>
+          <div class="form-group">
+            <label>Apellidos *</label>
+            <input type="text" [(ngModel)]="form.lastName" placeholder="Apellidos completos" />
+          </div>
+          <div class="form-group">
+            <label>DNI *</label>
+            <input type="text" [(ngModel)]="form.documentNumber" placeholder="00000000" maxlength="8" />
+          </div>
+          <div class="form-group">
+            <label>Sección</label>
+            <select [(ngModel)]="form.sectionId">
+              <option value="">Seleccionar...</option>
+              <option value="3°A">3°A</option>
+              <option value="3°B">3°B</option>
+              <option value="4°A">4°A</option>
+              <option value="4°B">4°B</option>
+              <option value="5°A">5°A</option>
+              <option value="5°B">5°B</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Correo electrónico</label>
+            <input type="email" [(ngModel)]="form.email" placeholder="correo@ie20188.edu.pe" />
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="form.phone" placeholder="9XXXXXXXX" />
+          </div>
+          <div class="form-group">
+            <label>Fecha de nacimiento</label>
+            <input type="date" [(ngModel)]="form.birthDate" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" (click)="showModal.set(false)">Cancelar</button>
+        <button class="btn-primary" (click)="save()">{{ isEditing() ? 'Actualizar' : 'Crear Estudiante' }}</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

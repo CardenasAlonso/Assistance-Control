@@ -1,0 +1,66 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Mis Calificaciones</h1>
+      <p>{{ userName }} &nbsp;·&nbsp; {{ activePeriod }} &nbsp;·&nbsp; Currículo Nacional 2025</p>
+    </div>
+    <div class="level-legend">
+      <span class="level-DESTACADO">AD ≥18</span>
+      <span class="level-LOGRADO">A ≥14</span>
+      <span class="level-EN_PROCESO">B ≥11</span>
+      <span class="level-EN_INICIO">C &lt;11</span>
+    </div>
+  </div>
+
+  <div class="subjects-list">
+    @for (sub of subjects(); track sub.id) {
+    <div class="subject-block">
+      <div class="subject-header" (click)="toggleSubject(sub)">
+        <div class="sh-left">
+          <div class="sub-color" [style.background]="sub.color"></div>
+          <div class="sh-info">
+            <span class="sh-name">{{ sub.name }}</span>
+            <span class="sh-teacher">{{ sub.teacher }}</span>
+          </div>
+        </div>
+        <div class="sh-right">
+          <div class="sh-avg">
+            <span class="avg-num">{{ getSubjectAvg(sub) }}</span>
+            <span [class]="'avg-level ' + getLevelClass(getSubjectAvg(sub))">{{ getLevel(getSubjectAvg(sub)) }}</span>
+          </div>
+          <lucide-icon [img]="sub.expanded ? ChevDownIcon : ChevRightIcon" class="chevron"></lucide-icon>
+        </div>
+      </div>
+
+      @if (sub.expanded) {
+      <div class="subject-body">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:45%">Competencia</th>
+                <th>Bim 1</th>
+                <th>Bim 2</th>
+                <th>Bim 3</th>
+                <th>Bim 4</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (comp of sub.competencies; track comp.name) {
+              <tr>
+                <td class="comp-name">{{ comp.name }}</td>
+                <td><span [class]="getLevelClass(comp.bim1)">{{ comp.bim1 ?? '–' }}</span></td>
+                <td><span [class]="getLevelClass(comp.bim2)">{{ comp.bim2 ?? '–' }}</span></td>
+                <td><span [class]="getLevelClass(comp.bim3)">{{ comp.bim3 ?? '–' }}</span></td>
+                <td><span [class]="getLevelClass(comp.bim4)">{{ comp.bim4 ?? '–' }}</span></td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,79 @@
+.sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.section-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08)
+    }
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #6b7280
+    }
+}
+
+.section-icon {
+    width: 40px;
+    height: 40px;
+    background: #f0fdf4;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    lucide-icon {
+        width: 20px;
+        height: 20px;
+        color: #16a34a
+    }
+}
+
+.section-stats {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid #f1f5f9;
+    margin-bottom: 12px;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.72rem;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.stat-val {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.section-actions {
+    display: flex;
+    justify-content: flex-end;
+}

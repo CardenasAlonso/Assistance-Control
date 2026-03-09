@@ -1,0 +1,138 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Asistencia de Estudiante</h1>
+      <p>Consultar asistencia individual por alumno</p>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="search-wrapper" style="flex:1;min-width:200px">
+      <lucide-icon [img]="SearchIcon" class="search-icon"></lucide-icon>
+      <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Buscar alumno por nombre o DNI..."
+        (input)="filterStudents()" />
+    </div>
+    <select class="filter-select" [(ngModel)]="selectedPeriod">
+      <option value="">Todos los períodos</option>
+      <option value="B1">1° Bimestre</option>
+      <option value="B2">2° Bimestre</option>
+    </select>
+  </div>
+
+  @if (!selectedStudent) {
+  <div class="card">
+    <div class="card-header">
+      <h3>Seleccionar Estudiante</h3>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Sección</th>
+            <th>Asistencia</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of filteredStudents; track s.id) {
+          <tr>
+            <td style="font-weight:600">{{ s.lastName }}, {{ s.firstName }}</td>
+            <td style="color:var(--cv-text-muted);font-size:.82rem">{{ s.dni }}</td>
+            <td><span class="badge navy">{{ s.section }}</span></td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:80px;height:6px;background:var(--cv-border-light);border-radius:99px;overflow:hidden">
+                  <div [style.width.%]="s.pct" style="height:100%;border-radius:99px"
+                    [style.background]="s.pct >= 90 ? 'var(--cv-success)' : s.pct >= 75 ? 'var(--cv-warning)' : 'var(--cv-danger)'">
+                  </div>
+                </div>
+                <span style="font-family:var(--font-display);font-weight:700;font-size:.9rem">{{ s.pct }}%</span>
+              </div>
+            </td>
+            <td><button class="btn-small navy"
+                style="background:#e8edfa;color:var(--cv-navy);border:1px solid var(--cv-border)"
+                (click)="selectStudent(s)">Ver Detalle</button></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+
+  @if (selectedStudent) {
+  <div class="card">
+    <div class="card-header">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div
+          style="width:44px;height:44px;background:var(--cv-navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--cv-gold);font-size:1.1rem">
+          {{ selectedStudent.firstName.charAt(0) }}
+        </div>
+        <div>
+          <h3>{{ selectedStudent.lastName }}, {{ selectedStudent.firstName }}</h3>
+          <p style="font-size:.78rem;color:var(--cv-text-muted)">DNI: {{ selectedStudent.dni }} · Sección: {{
+            selectedStudent.section }}</p>
+        </div>
+      </div>
+      <button class="btn-outline" (click)="selectedStudent = null"><lucide-icon [img]="XIcon"></lucide-icon>
+        Volver</button>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat-card">
+        <div class="stat-icon green"><lucide-icon [img]="CheckIcon"></lucide-icon></div>
+        <div class="stat-info">
+          <p class="stat-label">Presencias</p>
+          <p class="stat-value">{{ selectedStudent.present }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><lucide-icon [img]="XCircleIcon"></lucide-icon></div>
+        <div class="stat-info">
+          <p class="stat-label">Ausencias</p>
+          <p class="stat-value">{{ selectedStudent.absent }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange"><lucide-icon [img]="ClockIcon"></lucide-icon></div>
+        <div class="stat-info">
+          <p class="stat-label">Tardanzas</p>
+          <p class="stat-value">{{ selectedStudent.late }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon navy"><lucide-icon [img]="ShieldIcon"></lucide-icon></div>
+        <div class="stat-info">
+          <p class="stat-label">Asistencia</p>
+          <p class="stat-value">{{ selectedStudent.pct }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Entrada</th>
+            <th>Método</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of detailRecords; track r.date) {
+          <tr>
+            <td>{{ r.date }}</td>
+            <td>{{ r.time }}</td>
+            <td><span class="badge navy">{{ r.method }}</span></td>
+            <td><span class="badge" [class]="getStatusClass(r.status)">{{ getStatusLabel(r.status) }}</span></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+</div>
