@@ -1,59 +1,57 @@
-# AssistanceControl
+# School Management System — I.E. Centro de Varones, Cañete
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.3.
+## Servicios
 
-## Development server
+| Servicio | Puerto | Descripción |
+|---|---|---|
+| school-management-system | :8085 | Backend principal |
+| minedu-chatbot-service | :8086 | Agente IA MINEDU |
 
-To start a local development server, run:
+## Requisitos
+- Java 21
+- Oracle Database (con Wallet configurado)
+- ChromaDB (Docker): `docker run -p 8000:8000 chromadb/chroma`
+- Variable de entorno: `ANTHROPIC_API_KEY=tu-api-key`
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Ejecutar
 
 ```bash
-ng generate --help
+# 1. Backend principal
+cd school-management-system
+mvn spring-boot:run
+
+# 2. ChromaDB
+docker run -d -p 8000:8000 chromadb/chroma
+
+# 3. Chatbot
+cd minedu-chatbot-service
+export ANTHROPIC_API_KEY=tu-api-key-aqui
+mvn spring-boot:run
 ```
 
-## Building
+## Endpoints principales
 
-To build the project run:
+### Auth
+- POST /api/auth/login → { email, password }
 
-```bash
-ng build
+### Blockchain
+- GET  /api/blockchain/verify → verifica integridad de la cadena
+- GET  /api/blockchain/student/{id} → historial de bloques de un alumno
+
+### Chatbot (puerto 8086)
+- POST /api/chat → { sessionId, userId, userRole, message }
+- GET  /api/chat/history/{sessionId}
+- POST /api/documents/index → subir PDF de MINEDU (multipart)
+
+## Documentos MINEDU a indexar primero
+1. Currículo Nacional de la Educación Básica (CNEB)
+2. Programa Curricular de Educación Secundaria
+3. Resolución Ministerial año escolar vigente
+4. Orientaciones para Evaluación Formativa
+
+## Arquitectura hexagonal — capas
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+domain/       → modelos puros, enums, excepciones (sin dependencias)
+application/  → ports/in (interfaces de entrada), ports/out (salida), usecases, DTOs
+infrastructure/ → controllers, entities, mappers, config, adapters
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
