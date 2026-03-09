@@ -1,0 +1,20 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: school-management-system
+
+  r2dbc:
+    url: r2dbc:oracle://schoolmanagment_high?oracle.net.tns_admin=./Wallet_SchoolManagment
+    username: DEVHANCEL
+    password: "*AlonsoCardenasTrujillo2025"
+    pool:
+      enabled: false
+      initial-size: 5
+      max-size: 20
+      validation-query: "SELECT 1 FROM DUAL"
+
+jwt:
+  secret: XeS6zyDFgre9NeZFBjgn97tptNV5CrEGL8HwQ6RX6B/1DOiaYO32zG9M1VMeqOfzkTknOrFRK4Z5pTKUVkXryw==
+  expiration: 86400000
