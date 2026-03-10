@@ -6,7 +6,7 @@
 }
 
 .welcome-banner {
-  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 60%, #2A4A9C 100%);
+  background-color: rgb(121, 1, 1);
   border-radius: var(--radius-xl);
   padding: 28px 32px;
   display: flex;
@@ -32,7 +32,7 @@
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.993);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,7 +42,7 @@
     svg {
       width: 28px;
       height: 28px;
-      color: var(--gold-bright);
+      color: rgb(0, 0, 0);
     }
   }
 
@@ -56,7 +56,7 @@
     }
 
     p {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.822);
       font-size: 0.875rem;
       margin: 0;
     }

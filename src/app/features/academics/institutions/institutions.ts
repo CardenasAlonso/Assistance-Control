@@ -33,7 +33,7 @@ export class Institutions {
 
   sections = ['3°A', '3°B', '4°A', '4°B', '5°A', '5°B'];
   summary = [
-    { label: 'Total Estudiantes', value: '450' }, { label: 'Total Docentes', value: '32' },
+    { label: 'Total Estudiantes', value: '1000' }, { label: 'Total Docentes', value: '32' },
     { label: 'Total Secciones', value: '6' }, { label: 'Bimestres', value: '4' },
   ];
 

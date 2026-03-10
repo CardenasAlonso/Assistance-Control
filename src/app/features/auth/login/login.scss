@@ -10,7 +10,7 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(196, 150, 42, 0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(53, 87, 160, 0.12) 0%, transparent 50%);
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(160, 53, 53, 0.12) 0%, transparent 50%);
   }
 }
 
@@ -20,47 +20,62 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px 64px;
+  padding: 60px 80px;
   position: relative;
   z-index: 1;
+  background-color: #ffffff; 
+
+  &::before {
+    display: none;
+  }
 }
 
 .crest {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 48px;
+  align-items: center; 
+  gap: 16px;          
+  margin-bottom: 30px;
 
   .crest-badge {
-    width: 64px;
-    height: 64px;
-    background: linear-gradient(135deg, var(--gold) 0%, #E5B63A 100%);
-    border-radius: 16px;
+    width: 160px;      
+    height: 160px;
+    background: #ffffff00;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--navy-dark);
-    box-shadow: 0 8px 32px rgba(196, 150, 42, 0.5);
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+    margin-left: 120px;
+
+
+    .crest-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
 
   .crest-text {
     h1 {
       font-family: var(--font-serif);
-      color: #fff;
-      font-size: 1.25rem;
-      line-height: 1.2;
-      margin: 0 0 4px;
+      color: #000000; 
+      font-size: 36px;
+      line-height: 1.1;
+      margin: 0;
+      font-weight: 800;
+      margin-left: 20px;
     }
 
     p {
-      color: rgba(255, 255, 255, 0.4);
-      font-size: 0.8125rem;
+      color: #666666; 
+      font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
+      margin: 2px 0 0;
+      margin-left: 20px;
+
     }
   }
 }
@@ -68,26 +83,30 @@
 .tagline {
   h2 {
     font-family: var(--font-serif);
-    color: #fff;
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin-bottom: 16px;
+    color: #000000; 
+    font-size: 40px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    font-weight: 800;
+    margin-left: 120px;
 
     em {
-      color: var(--gold-bright);
+      color: var(--gold-bright); 
       font-style: italic;
     }
   }
 
   p {
-    color: rgba(255, 255, 255, 0.5);
+    margin-left: 120px;
+    color: #444444; 
     font-size: 1rem;
     line-height: 1.7;
-    max-width: 400px;
+    max-width: 440px;
   }
 }
 
 .stats-row {
+  margin-left: 120px;
   display: flex;
   gap: 32px;
   margin-top: 56px;
@@ -97,7 +116,7 @@
     flex-direction: column;
     gap: 4px;
     padding-right: 32px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid #eeeeee; 
 
     &:last-child {
       border-right: none;
@@ -106,23 +125,23 @@
     .stat-num {
       font-family: var(--font-serif);
       font-size: 2rem;
-      font-weight: 700;
-      color: var(--gold-bright);
+      font-weight: 800;
+      color: var(--gold-bright); 
     }
 
     .stat-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: rgba(255, 255, 255, 0.35);
+      color: #999999;
     }
   }
 }
 
 // ── Right Panel ─────────────────────────────────────────────────────────────────
 .login-right {
-  width: 480px;
+  width: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,9 +150,11 @@
   border-left: 1px solid rgba(255, 255, 255, 0.07);
   position: relative;
   z-index: 1;
+  background-color: #ffffff; 
 }
 
 .login-card {
+  margin-right: 120px;
   width: 100%;
   background: #fff;
   border-radius: 20px;
@@ -148,19 +169,19 @@
   .card-icon {
     width: 52px;
     height: 52px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 16px;
-    box-shadow: 0 8px 24px rgba(26, 46, 91, 0.3);
+    box-shadow: 0 8px 24px rgba(91, 28, 26, 0.3);
+    background-color: rgb(192, 2, 2);
 
     lucide-icon,
     svg {
       width: 26px;
       height: 26px;
-      color: #fff;
+      color: #ffffff;
     }
   }
 
@@ -260,7 +281,7 @@
 .btn-login {
   width: 100%;
   padding: 13px;
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  background-color: rgb(192, 2, 2);
   color: #fff;
   border: none;
   border-radius: var(--radius);

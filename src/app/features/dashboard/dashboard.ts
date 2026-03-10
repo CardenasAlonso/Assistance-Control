@@ -34,7 +34,7 @@ export class Dashboard implements OnInit {
     { label: 'Asistente IA MINEDU', sub: 'Consultar currículo', route: 'chat', bg: 'var(--cv-info-tint)', color: 'var(--cv-info)', icon: MessageSquare },
   ];
   adminActions = [
-    { label: 'Gestionar Estudiantes', sub: '450 registrados', route: 'students', bg: '#e8edfa', color: 'var(--cv-navy)', icon: GraduationCap },
+    { label: 'Gestionar Estudiantes', sub: '1000 registrados', route: 'students', bg: '#e8edfa', color: 'var(--cv-navy)', icon: GraduationCap },
     { label: 'Control de Entrada', sub: 'QR y Manual', route: 'entrance', bg: 'var(--cv-gold-tint)', color: 'var(--cv-gold)', icon: QrCode },
     { label: 'Ver Asistencia', sub: 'Reporte del día', route: 'attendance-dashboard', bg: 'var(--cv-success-tint)', color: 'var(--cv-success)', icon: Calendar },
     { label: 'Calificaciones', sub: 'Por competencia', route: 'student-grades', bg: 'var(--cv-info-tint)', color: 'var(--cv-info)', icon: BookOpen },
@@ -45,7 +45,7 @@ export class Dashboard implements OnInit {
     { type: 'danger', text: '12 alumnos con +3 faltas', sub: 'Requieren seguimiento' },
     { type: 'warning', text: '5 justificaciones pendientes', sub: 'En espera de revisión' },
     { type: 'info', text: 'Cierre de notas en 7 días', sub: '1° Bimestre 2025' },
-    { type: 'success', text: 'Asistencia del día: 96.2%', sub: '433 de 450 presentes' },
+    { type: 'success', text: 'Asistencia del día: 96.2%', sub: '933 de 1000 presentes' },
   ];
   attendanceSummary = [
     { label: 'Presentes', pct: 96, color: 'var(--cv-success)' },
@@ -80,7 +80,7 @@ export class Dashboard implements OnInit {
       { label: 'Asistencia Hoy', value: '96%', sub: 'Promedio', color: 'blue', icon: TrendingUp },
     ];
     return [
-      { label: 'Total Estudiantes', value: '450', sub: 'Matriculados', color: 'navy', icon: GraduationCap },
+      { label: 'Total Estudiantes', value: '1000', sub: 'Matriculados', color: 'navy', icon: GraduationCap },
       { label: 'Docentes', value: '32', sub: 'Activos', color: 'gold', icon: Users },
       { label: 'Asistencia Hoy', value: '96.2%', sub: 'Excelente', color: 'green', icon: Calendar },
       { label: 'Alertas Activas', value: '17', sub: 'Pendientes', color: 'red', icon: AlertTriangle },
